@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Info Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f8ff;
+      padding: 20px;
+    }
+    .card {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #007acc;
+    }
+    .info {
+      margin-bottom: 15px;
+    }
+    .info label {
+      font-weight: bold;
+      color: #333;
+    }
+    .info p {
+      margin: 4px 0 0;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Emergency Medical Info</h2>
+    <div class="info"><label>Name:</label><p id="name"></p></div>
+    <div class="info"><label>Age:</label><p id="age"></p></div>
+    <div class="info"><label>Blood Group:</label><p id="blood"></p></div>
+    <div class="info"><label>Medical Conditions:</label><p id="conditions"></p></div>
+    <div class="info"><label>Emergency Contact:</label><p id="emergencyName"></p></div>
+    <div class="info"><label>Contact Phone:</label><p id="emergencyPhone"></p></div>
+    <div class="info"><label>Address:</label><p id="address"></p></div>
+  </div>
+
+  <script>
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      const keys = ['name', 'age', 'blood', 'conditions', 'emergencyName', 'emergencyPhone', 'address'];
+
+      keys.forEach(key => {
+        const value = params.get(key);
+        document.getElementById(key).textContent = value || 'N/A';
+      });
+    }
+
+    window.onload = getQueryParams;
+  </script>
+
+</body>
+</html>

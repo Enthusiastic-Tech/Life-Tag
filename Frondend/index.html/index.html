@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LifeTag Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="data.json"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-700 to-green-500 min-h-screen text-gray-800">
+
+  <header class="w-full bg-white shadow-md py-4 px-6 flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-blue-700">LifeTag Dashboard</h1>
+    <div id="time" class="text-lg font-mono text-gray-600"></div>
+  </header>
+
+  <main class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+
+    <!-- Survivor Info -->
+    <section class="bg-white rounded-xl shadow-lg p-4 col-span-1 lg:col-span-3">
+      <h2 class="text-xl font-semibold mb-2">🧍 Survivor Info</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div><p class="font-semibold">Name</p><p id="name" class="text-blue-600">--</p></div>
+        <div><p class="font-semibold">Age</p><p id="age">--</p></div>
+        <div><p class="font-semibold">Device ID</p><p id="deviceId">--</p></div>
+        <div><p class="font-semibold">Status</p><p id="connectionStatus" class="font-bold">--</p></div>
+      </div>
+    </section>
+
+    <!-- Last Known Location -->
+    <section class="bg-blue-100 rounded-xls" clases="w-full h-64 rounded-lg shadow-md mb-2" style="padding: 20px;">
+        <img src="https://onefivenine.com/images/GoogleMapImages/28_6677_23.jpg">
+      </div>
+      <p class="text-sm text-gray-700 text-center">
+        Lat: <span id="lat">192.34</span> | Lng: <span id="lng">85.76</span>
+      </p>
+    </section>
+
+    <!-- Health Chart -->
+    <section class="bg-green-100 rounded-xl shadow-md p-4">
+      <h2 class="text-xl font-semibold text-center mb-2">❤️ Heart Rate</h2>
+      <canvas id="healthChart"></canvas>
+    </section>
+
+    <!-- Temperature & Humidity -->
+    <section class="bg-purple-100 rounded-xl shadow-md p-4 text-center">
+      <h2 class="text-xl font-semibold mb-2">🌡️ Temperature & Humidity</h2>
+      <p id="temperature" class="text-3xl font-bold text-red-700">--°C</p>
+      <p id="humidity" class="text-xl">--% Humidity</p>
+    </section>
+
+    <!-- Alerts -->
+    <section class="bg-yellow-100 rounded-xl shadow-md p-4 text-center">
+      <h2 class="text-xl font-semibold mb-2">🚨 Emergency Alerts</h2>
+      <p id="alertMessage" class="text-red-600 font-bold text-lg">No Alerts</p>
+    </section>
+
+    <!-- Battery -->
+    <section class="bg-pink-100 rounded-xl shadow-md p-4 text-center">
+      <h2 class="text-xl font-semibold mb-2">🔋 Battery Status</h2>
+      <p id="battery" class="text-3xl font-bold">--%</p>
+    </section>
+  </main>
+
+  <footer class="text-center text-white py-4 mt-10 bg-blue-900">
+    Made with ❤️ for Disaster Response | LifeTag &copy; 2025
+  </footer>
+
+  <!-- Scripts -->
+<script>
+var name = "Bhanu Pratap Singh";
+var age = 25;
+var deviceId = "LT1234567890";
+var connectionStatus = "Disconnected";
+var temp = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
+var humidity = Math.floor(Math.random() * (100 - 20 + 1)) + 20;
+var battery = Math.floor(Math.random() * (100 - 50 + 1)) + 50; // Start from 50-100%
+var alertMessage = "No Alert 🚨";
+
+// Function to update UI and alerts
+function updateDashboard() {
+  if (battery < 20) {
+    alertMessage = "Battery Low! Please Charge!";
+  } else if (temp > 40) {
+    alertMessage = "High Temperature Alert!";
+  } else if (humidity < 30) {
+    alertMessage = "Low Humidity Alert!";
+  } else if (connectionStatus === "Disconnected") {
+    alertMessage = "Device Disconnected!";
+  } else {
+    alertMessage = "No Alerts 🚀";
+  }
+
+  document.getElementById("name").innerHTML = name;
+  document.getElementById("age").innerHTML = age;
+  document.getElementById("deviceId").innerHTML = deviceId;
+  document.getElementById("connectionStatus").innerHTML = connectionStatus;
+  document.getElementById("temperature").innerHTML = temp + "°C";
+  document.getElementById("humidity").innerHTML = humidity + "% Humidity";
+  document.getElementById("battery").innerHTML = battery + "%";
+  document.getElementById("alertMessage").innerHTML = alertMessage;
+}
+
+// Initial dashboard update
+updateDashboard();
+
+// Battery drains 1% every 60,000ms (1 minute)
+setInterval(() => {
+  if (battery > 0) {
+    battery--;
+    updateDashboard();
+  }
+}, 60000); // 60000 ms = 1 minute
+
+</script>
+
+  <script>
+    // Update Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("time").textContent = now.toLocaleString();
+    }
+/*
+    // Fetch User and Sensor Data
+    async function fetchDataFromJSON() {
+      try {
+        const userRes = await fetch("userdata.json");
+        const userDet = await fetch("data.json");
+        const user = await userRes.json();
+        const datas = await userDet.json();
+
+  
+
+        document.getElementById("name").innerText = user.name;
+        document.getElementById("age").innerText = user.age;
+        document.getElementById("deviceId").innerText = user.deviceId;
+
+        const dataRes = await fetch("data.json");
+        const data = await dataRes.json();
+
+        document.getElementById("temperature").innerText = datas.temperature + "°C";
+        document.getElementById("humidity").innerText = datas.humidity + "% Humidity";
+        document.getElementById("battery").innerText = datas.battery + "%";
+        document.getElementById("lat").textContent = datas.location.lat;
+        document.getElementById("lng").textContent = datas.location.lng;
+
+        const alertEl = document.getElementById("alertMessage");
+        alertEl.textContent = data.alert;
+        alertEl.className = data.alert === "No Alerts" ? "text-green-600 font-bold text-lg" : "text-red-600 font-bold text-lg";
+
+        const statusElement = document.getElementById("connectionStatus");
+        statusElement.textContent = data.status;
+        statusElement.className = data.status === "Connected"
+          ? "text-green-600 font-bold"
+          : "text-red-600 font-bold";
+      } catch (err) {
+        console.error("Error loading JSON:", err);
+      }
+    }
+*/
+    // Heart Rate Chart
+    const ctx = document.getElementById('healthChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['10 min ago', '5 min ago', 'Now'],
+        datasets: [{
+          label: 'Heart Rate (BPM)',
+          data: [80, 75, 78],
+          borderColor: 'red',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: true,
+          backgroundColor: 'rgba(255, 99, 132, 0.1)',
+          temperature: '23',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+
+    // Google Map Initialization
+    function initMap() {
+      const lat = 28.7041;
+      const lng = 77.1025;
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat, lng },
+        zoom: 13,
+      });
+      new google.maps.Marker({ position: { lat, lng }, map, title: "Last Known Location" });
+    }
+
+    // Initialize Everything
+    window.onload = () => {
+      updateClock();
+      fetchDataFromJSON();
+    };
+
+    setInterval(updateClock, 1000);
+    setInterval(fetchDataFromJSON, 5000);
+  </script>
+
+  <!-- Google Maps -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+
+</body>
+</html>

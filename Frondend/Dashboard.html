@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeTag Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-600 to-green-500 min-h-screen flex flex-col items-center justify-center p-6">
+    <div class="bg-white shadow-xl rounded-2xl p-6 w-full max-w-5xl">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">🚀 LifeTag Dashboard</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-4 bg-blue-100 rounded-xl text-center">
+                <h2 class="text-xl font-semibold">Last Known Location</h2>
+                <div id="map" class="w-full h-64 rounded-lg shadow-md"></div>
+            </div>
+            <div class="p-4 bg-green-100 rounded-xl text-center">
+                <h2 class="text-xl font-semibold">Health Status</h2>
+                <canvas id="healthChart"></canvas>
+            </div>
+            <div class="p-4 bg-purple-100 rounded-xl text-center">
+                <h2 class="text-xl font-semibold">Temperature & Humidity</h2>
+                <p id="temperature" class="text-2xl font-bold">--°C</p>
+                <p id="humidity" class="text-lg">--% Humidity</p>
+            </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-4 bg-yellow-100 rounded-xl text-center">
+                <h2 class="text-xl font-semibold">Emergency Alerts</h2>
+                <p id="alertMessage" class="text-red-600 font-bold text-lg mt-2">No Alerts 🚀</p>
+            </div>
+            <div class="p-4 bg-pink-100 rounded-xl text-center">
+                <h2 class="text-xl font-semibold">Battery Status</h2>
+                <p id="battery" class="text-2xl font-bold">--%</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 28.7041, lng: 77.1025 },
+                zoom: 12,
+            });
+            new google.maps.Marker({
+                position: { lat: 28.7041, lng: 77.1025 },
+                map,
+                title: "Last Known Location",
+            });
+        }
+
+        const ctx = document.getElementById('healthChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['10 min ago', '5 min ago', 'Now'],
+                datasets: [{
+                    label: 'Heart Rate (BPM)',
+                    data: [80, 75, 78],
+                    borderColor: 'red',
+                    fill: false,
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        function updateData() {
+            document.getElementById("temperature").innerText = (Math.random() * (40 - 20) + 20).toFixed(1) + "°C";
+            document.getElementById("humidity").innerText = (Math.random() * (100 - 40) + 40).toFixed(1) + "% Humidity";
+            document.getElementById("battery").innerText = (Math.random() * (100 - 20) + 20).toFixed(0) + "%";
+        }
+        setInterval(updateData, 5000);
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Medical Info QR Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f1f1f1;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      max-width: 450px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #qrcode {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Medical Info QR Generator</h2>
+
+    <label>Name</label>
+    <input type="text" id="name" required />
+
+    <label>Age</label>
+    <input type="number" id="age" required />
+
+    <label>Blood Group</label>
+    <select id="blood">
+      <option value="A+">A+</option>
+      <option value="A-">A-</option>
+      <option value="B+">B+</option>
+      <option value="B-">B-</option>
+      <option value="O+">O+</option>
+      <option value="O-">O-</option>
+      <option value="AB+">AB+</option>
+      <option value="AB-">AB-</option>
+    </select>
+
+    <label>Medical Conditions</label>
+    <input type="text" id="conditions" placeholder="e.g. Diabetes, Asthma" />
+
+    <label>Emergency Contact Name</label>
+    <input type="text" id="emergencyName" placeholder="e.g. Jane Doe" />
+
+    <label>Emergency Contact Phone</label>
+    <input type="tel" id="emergencyPhone" placeholder="e.g. +1234567890" />
+
+    <label>Address</label>
+    <textarea id="address" rows="3" placeholder="Enter full address here"></textarea>
+
+    <button onclick="generateQR()">Generate QR</button>
+
+    <div id="qrcode"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    function generateQR() {
+      const name = encodeURIComponent(document.getElementById("name").value);
+      const age = encodeURIComponent(document.getElementById("age").value);
+      const blood = encodeURIComponent(document.getElementById("blood").value);
+      const conditions = encodeURIComponent(document.getElementById("conditions").value);
+      const emergencyName = encodeURIComponent(document.getElementById("emergencyName").value);
+      const emergencyPhone = encodeURIComponent(document.getElementById("emergencyPhone").value);
+      const address = encodeURIComponent(document.getElementById("address").value);
+
+      const baseURL = "http://127.0.0.1:3000/Frondend/Netlift.html";
+ // Change to your real domain
+      const fullURL = `${baseURL}?name=${name}&age=${age}&blood=${blood}&conditions=${conditions}&emergencyName=${emergencyName}&emergencyPhone=${emergencyPhone}&address=${address}`;
+
+      // Clear previous QR if exists
+      document.getElementById("qrcode").innerHTML = "";
+
+      // Generate QR Code
+      new QRCode(document.getElementById("qrcode"), {
+        text: fullURL,
+        width: 200,
+        height: 200
+      });
+    }
+  </script>
+</body>
+</html>
